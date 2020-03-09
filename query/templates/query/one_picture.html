@@ -2,12 +2,13 @@
 
 {% block extra_css %}
 <style>
-    .button {
-        background-color: #4CAF50;
-        border: none;
-        border-radius: 4px;
+    .my-button {
+        width: 100%;
+        background-color: rgb(76, 175, 80);
+        border: 1px solid rgb(76, 175, 80);
+        border-radius: 5px;
         color: white;
-        padding: 8px 25px;
+        padding: 8px 10px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
@@ -21,12 +22,44 @@
 {% block extra_script %}
 <script>
     var start_time = (new Date()).valueOf();
+    var grade = -1;
+    var grade_color = ["",
+        "rgb(23, 170, 228)",
+        "rgb(23, 170, 228)",
+        "rgb(76, 175, 80)",
+        "rgb(228, 192, 34)",
+        "rgb(228, 192, 34)",
+        "rgb(231, 35, 110)",
+        "rgb(231, 35, 110)",
+        "rgb(231, 35, 110)"
+    ];
 
     function validateForm() {
-        document.getElementById("score").value = slider.getValue();
+        document.getElementById("grade").value = grade;
         var end_time = (new Date()).valueOf();
-        document.getElementById("time_cost").value = end_time - start_time;
+        document.getElementById("time_s2").value = end_time - start_time;
         return true;
+    }
+
+    function annotate() {
+        var end_time = (new Date()).valueOf();
+        document.getElementById("time_s1").value = end_time - start_time;
+        start_time = end_time;
+        document.getElementById("img-pair").style.display="inline";
+        document.getElementById("annt-btn").style.display="none";
+        for (i = 1; i < 9; i++) {
+            document.getElementById("grade-btn" + i).style.border = "1px solid " + grade_color[i];
+            document.getElementById("grade-btn" + i).style.backgroundColor = grade_color[i];
+        }
+    }
+
+    function set_grade(value) {
+        if (grade > 0) {
+            document.getElementById("grade-btn" + grade).style.border = "1px solid " + grade_color[grade];
+        }
+        grade = value;
+        console.log(grade);
+        document.getElementById("grade-btn" + grade).style.border = "1px solid black";
     }
 </script>
 {% endblock %}
@@ -37,7 +70,7 @@
     <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
     <h3 style="text-align: center;">intent description: {{ intent }}</h3>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-3">
         <div class="col-3">
             {% load static %}
             <img style="width: 100%;" src="{% static img1 %}" />
@@ -46,22 +79,70 @@
 
     <hr/>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" id="annt-btn">
         <div class="col-3">
-            <div class="button" value="start annotation"></div>
+            <div class="my-button" onclick="annotate()">start annotation</div>
         </div>
     </div>
 
-    <form name="question" action="{% url 'query:questions' question_id user_name %}"
-          onsubmit="return validateForm();" method="post">
-    {% csrf_token %}
+    <div class="container" style="display: none;" id="img-pair">
+        <div class="row justify-content-around">
+            <div class="col-4 align-self-center">
+                {% load static %}
+                <img style="width: 100%;" src="{% static img2 %}" />
+            </div>
+            <div class="col-4 align-self-center">
+                {% load static %}
+                <img style="width: 100%;" src="{% static img3 %}" />
+            </div>
+        </div>
 
-    <input type="hidden" name="score" id="score">
-    <input type="hidden" name="time_cost" id="time_cost">
+        <hr/>
 
-    <input type="submit" value="next" class="button" />
-    </form>
+        <div class="row justify-content-around">
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(1)" id="grade-btn1">definitely left</div>
+            </div>
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(2)" id="grade-btn2">prefer left</div>
+            </div>
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(3)" id="grade-btn3">tie</div>
+            </div>
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(4)" id="grade-btn4">prefer right</div>
+            </div>
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(5)" id="grade-btn5">definitely right</div>
+            </div>
+        </div>
+        <div class="row justify-content-around">
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(6)" id="grade-btn6">left not relevant</div>
+            </div>
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(7)" id="grade-btn7">both not relevant</div>
+            </div>
+            <div class="col-2 align-self-center">
+                <div class="my-button" onclick="set_grade(8)" id="grade-btn8">right not relevant</div>
+            </div>
+        </div>
 
+        <hr/>
 
+        <form name="question" action="{% url 'query:questions' question_id user_name %}"
+              onsubmit="return validateForm();" method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="grade" id="grade">
+        <input type="hidden" name="time_s1" id="time_s1">
+        <input type="hidden" name="time_s2" id="time_s2">
+        <div class="row justify-content-center mt-1">
+            <div class="col-2">
+                <input type="submit" value="next" class="my-button" />
+            </div>
+        </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

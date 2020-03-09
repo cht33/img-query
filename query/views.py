@@ -57,9 +57,9 @@ def process_question_post(request, question_id, user_name):
         content = {
             'query': query,
             'intent': intent,
-            'img1': IMG_PATH + img1 + '.jpg',
-            'img2': IMG_PATH + img2 + '.jpg',
-            'img3': IMG_PATH + img3 + '.jpg',
+            'img1': IMG_PATH + img1,
+            'img2': IMG_PATH + img2,
+            'img3': IMG_PATH + img3,
         }
         content['question_id'] = question_id + 1
         content['user_name'] = user_name
