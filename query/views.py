@@ -13,7 +13,8 @@ QUSETION_NUM = 5
 QUESTION_SHUFFLE = False
 
 # 数据集和结果保存路径
-QUESTION_DATA = 'query/test_data'
+QUESTION_DATA = 'query/test_data_1'
+IMG_PATH = 'query/images/'
 SAVE_PATH = 'query/results/'
 
 all_questions = Questions(QUESTION_DATA, QUESTION_SHUFFLE)
@@ -30,7 +31,7 @@ def homepage(request):
             return HttpResponseRedirect(reverse('query:questions', args=(question_id, user_name,)))
         else:
             model.add_new_user(user_name)
-            return HttpResponseRedirect(reverse('query:tips', args=(user_name,)))
+            return HttpResponseRedirect(reverse('query:questions', args=(0, user_name,)))
     else:
         return render(request, 'query/homepage.html')
 
@@ -43,17 +44,23 @@ def process_question_post(request, question_id, user_name):
     if question_id < 0 or question_id > len(model):
         raise Http404("Question does not exist!")
 
-    # score为单张图片标注分数
-    if request.POST.get('score') != None:
-        ans = int(request.POST.get('score'))
-        time_cost = int(request.POST.get('time_cost'))
-        model.set_ans(user_name, question_id-1, ans, time_cost)
+    # grade为标注类别，1~8
+    if request.POST.get('grade') != None:
+        ans = int(request.POST.get('grade'))
+        t1 = int(request.POST.get('time_s1'))
+        t2 = int(request.POST.get('time_s2'))
+        model.set_ans(user_name, question_id-1, ans, t1, t2)
 
     # 返回下一个问题的名字，图片文件名，图片描述
     if question_id != len(model):
-        img_name, img1, des = model.get_question(question_id)
-        img1 = 'query/images/' + img1 + '.jpg'
-        content = {'img_name': img_name, 'img1': img1, 'des': des}
+        query, intent, img1, img2, img3 = model.get_question(question_id)
+        content = {
+            'query': query,
+            'intent': intent,
+            'img1': IMG_PATH + img1 + '.jpg',
+            'img2': IMG_PATH + img2 + '.jpg',
+            'img3': IMG_PATH + img3 + '.jpg',
+        }
         content['question_id'] = question_id + 1
         content['user_name'] = user_name
         return content

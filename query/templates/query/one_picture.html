@@ -34,8 +34,8 @@
 {% block main_body %}
 
 <div class="container mt-2">
-    <h3 style="text-align: center;">查询词 {{ question_id }}: {{ img_name }}</h3>
-    <h3 style="text-align: center;">描述: {{des}}</h3>
+    <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
+    <h3 style="text-align: center;">intent description: {{ intent }}</h3>
 
     <div class="row justify-content-center">
         <div class="col-3">
@@ -45,6 +45,12 @@
     </div>
 
     <hr/>
+
+    <div class="row justify-content-center">
+        <div class="col-3">
+            <div class="button" value="start annotation"></div>
+        </div>
+    </div>
 
     <form name="question" action="{% url 'query:questions' question_id user_name %}"
           onsubmit="return validateForm();" method="post">
