@@ -61,13 +61,15 @@ class QueryModel:
     def add_new_user(self, name):
         self.user_data[name] = {}
         self.user_data[name]['ans_list'] = [-1] * len(self.questions)
-        self.user_data[name]['time_cost'] = [-1] * len(self.questions)
+        self.user_data[name]['time_s1'] = [-1] * len(self.questions)
+        self.user_data[name]['time_s2'] = [-1] * len(self.questions)
         self.user_data[name]['curr_id'] = 0
 
     # 保存某个用户第index个问题的答案和当前问题序号以及花费时间
-    def set_ans(self, name, index, ans, time_cost):
+    def set_ans(self, name, index, ans, t1, t2):
         self.user_data[name]['ans_list'][index] = ans
-        self.user_data[name]['time_cost'][index] = time_cost
+        self.user_data[name]['time_s1'][index] = t1
+        self.user_data[name]['time_s2'][index] = t2
         self.user_data[name]['curr_id'] = index + 1
 
     # 返回问题总数
@@ -78,9 +80,10 @@ class QueryModel:
     def save(self, name, filepath=None):
         s = ''
         ans_list = self.user_data[name]['ans_list']
-        time_cost = self.user_data[name]['time_cost']
+        t1 = self.user_data[name]['time_s1']
+        t2 = self.user_data[name]['time_s2']
         for i in range(0, len(self.questions)):
-            s += '{}\t{}\t{}\n'.format(self.questions_id[i], ans_list[i], time_cost[i])
+            s += '{}\t{}\t{}\t{}\n'.format(self.questions_id[i], t1[i], t2[i], ans_list[i])
         if filepath == None:
             print(s)
         else:
@@ -102,8 +105,8 @@ class QueryModel:
 
 # unit test
 if __name__ == '__main__':
-    all_questions = Questions(filename='test_data', QUESTION_SHUFFLE=False)
-    num = 5
+    all_questions = Questions(filename='test_data_1', QUESTION_SHUFFLE=False)
+    num = 1
     m = QueryModel()
     m.reset_questions(start_pos=0, num=num, all_questions=all_questions)
     print('size: {}'.format(len(m)))
@@ -112,7 +115,7 @@ if __name__ == '__main__':
     print(m.has_user('aaa'))
     m.add_new_user('bbb')
     for i in range(num):
-        m.set_ans('aaa', i, 35)
+        m.set_ans('aaa', i, 35, 233, 2333)
 
     user_data, questions_id, questions = m.get_all()
     print(user_data)
