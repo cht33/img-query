@@ -2,77 +2,7 @@
 
 {% block extra_css %}
 <style>
-    div.mainbody {
-        border-radius: 5px;
-        background-color: #f2f2f2;
-        padding: 20px;
-        width: 85%;
-        margin: auto;
-        margin-top: 20px;
-        overflow: auto;
-    }
-
-    div.mainbody p {
-        font-size: 16px;
-    }
-
-    div.mainbody h2 {
-        text-align: center;
-    }
-
-    div.img1 {
-        width: 80%;
-        margin: auto;
-    }
-
-    div.img2 {
-        width: 45%;
-        float: right;
-    }
-
-    div.imgs {
-        overflow: auto;
-        margin: 20px 0;
-    }
-
-    div.radios {
-        overflow: auto;
-        width: 80%;
-        margin: auto;
-    }
-
-    div.my_radio {
-        width: 16%;
-        float: left;
-        text-align: center;
-        background-color: #e2e2e2;
-        padding: 20px 0;
-        margin: 0 2%;
-        display: inline-block;
-        border-radius: 6px;
-    }
-
-    div.my-slider {
-        width: 50%;
-        margin: auto;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    #slider123 .slider-selection {
-        background: #cccccc;
-    }
-
-    #img1 {
-        width: 50%;
-        max-width: 50%;
-        margin-left: 25%;
-        margin-right: 25%;
-        margin-bottom: 20px;
-    }
-
     .button {
-        width: 10%;
         background-color: #4CAF50;
         border: none;
         border-radius: 4px;
@@ -82,32 +12,14 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
-        margin: 8px 45%;
+        margin: 8px;
         cursor: pointer;
-    }
-
-    label:active {
-        background-color: #c2c2c2;
-    }
-
-    input {
-        background-color: #4caf50;
     }
 </style>
 {% endblock %}
 
 {% block extra_script %}
 <script>
-    var slider = new Slider('#slider1', {
-        id: "slider123",
-        min: 0,
-        max: 100,
-        value: 50,
-        formatter: function(value) {
-            return '' + value;
-        },
-        tooltip: 'always'
-    });
     var start_time = (new Date()).valueOf();
 
     function validateForm() {
@@ -116,53 +28,34 @@
         document.getElementById("time_cost").value = end_time - start_time;
         return true;
     }
-
-    function showBigImg(id) {
-        $("#imgInModalID").attr("src", document.getElementById(id).src);
-        $("#imgModal").modal('show');
-    }
 </script>
 {% endblock %}
 
 {% block main_body %}
 
-<div class="mainbody">
-
+<div class="container mt-2">
     <h3 style="text-align: center;">查询词 {{ question_id }}: {{ img_name }}</h3>
     <h3 style="text-align: center;">描述: {{des}}</h3>
-    <div class="img1">
-    {% load static %}
-        <img style="width: 100%;" src="{% static img1 %}" id="img1" onclick="showBigImg('img1')"/>
-    </div>
 
-
-    <div class="modal fade bs-example-modal-lg text-center" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
-        <div class="modal-dialog modal-lg" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="modalLabel"></h4>
-                </div>
-                <img alt="" id="imgInModalID" src="" width="100%" >
-            </div>
+    <div class="row justify-content-center">
+        <div class="col-3">
+            {% load static %}
+            <img style="width: 100%;" src="{% static img1 %}" />
         </div>
     </div>
+
+    <hr/>
 
     <form name="question" action="{% url 'query:questions' question_id user_name %}"
           onsubmit="return validateForm();" method="post">
     {% csrf_token %}
-
-    <div class="my-slider">
-        <input style="width: 100%;" id="slider1" type="text" />
-    </div>
 
     <input type="hidden" name="score" id="score">
     <input type="hidden" name="time_cost" id="time_cost">
 
     <input type="submit" value="next" class="button" />
     </form>
+
 
 </div>
 {% endblock %}
