@@ -22,7 +22,11 @@
 {% block extra_script %}
 <script>
     var start_time = (new Date()).valueOf();
+
+    // 标注的选项
     var grade = -1;
+
+    // 8个按钮的颜色
     var grade_color = ["",
         "rgb(23, 170, 228)",
         "rgb(23, 170, 228)",
@@ -34,6 +38,7 @@
         "rgb(231, 35, 110)"
     ];
 
+    // 记录stage2用时，提交表单，转到下一个query
     function validateForm() {
         document.getElementById("grade").value = grade;
         var end_time = (new Date()).valueOf();
@@ -41,6 +46,7 @@
         return true;
     }
 
+    // 进入stage2开始标注，显示下方两张图片，设置按钮的样式，记录stage1用时
     function annotate() {
         var end_time = (new Date()).valueOf();
         document.getElementById("time_s1").value = end_time - start_time;
@@ -53,6 +59,7 @@
         }
     }
 
+    //  点击按钮，设置选中样式，记录grade
     function set_grade(value) {
         if (grade > 0) {
             document.getElementById("grade-btn" + grade).style.border = "1px solid " + grade_color[grade];
