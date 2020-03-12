@@ -23,15 +23,16 @@ model = QueryModel(QUSETION_START_POS, QUSETION_NUM, all_questions)
 # homepage
 def homepage(request):
     if request.POST.get('user_name'):
+        environment = str(request.POST['environment'])
         user_name = request.POST['user_name']
 
         # 根据是否存在当前用户来定位问题
         if model.has_user(user_name):
             question_id = model.get_user_ques_id(user_name)
-            return HttpResponseRedirect(reverse('query:questions', args=(question_id, user_name,)))
+            return HttpResponseRedirect(reverse('query:questions', args=(question_id, user_name, environment)))
         else:
             model.add_new_user(user_name)
-            return HttpResponseRedirect(reverse('query:questions', args=(0, user_name,)))
+            return HttpResponseRedirect(reverse('query:questions', args=(0, user_name, environment)))
     else:
         return render(request, 'query/homepage.html')
 
@@ -40,7 +41,8 @@ def tips(request, user_name):
     return render(request, 'query/tips.html', {'num': len(model), 'user_name': user_name})
 
 # process function
-def process_question_post(request, question_id, user_name):
+def process_question_post(request, question_id, user_name, environment):
+
     if question_id < 0 or question_id > len(model):
         raise Http404("Question does not exist!")
 
@@ -63,14 +65,15 @@ def process_question_post(request, question_id, user_name):
         }
         content['question_id'] = question_id + 1
         content['user_name'] = user_name
+        content['environment'] = environment
         return content
     else:
         return None
 
-def questions(request, question_id, user_name):
-    content = process_question_post(request, question_id, user_name)
+def questions(request, question_id, user_name, environment):
+    content = process_question_post(request, question_id, user_name, environment)
     if content == None:
-        model.save(user_name, SAVE_PATH)
+        model.save(user_name, environment, SAVE_PATH)
         return HttpResponseRedirect(reverse('query:thanks'))
     else:
         return render(request, 'query/one_picture.html', content)

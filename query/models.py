@@ -77,7 +77,7 @@ class QueryModel:
         return len(self.questions)
 
     # 将问卷结果保存至本地文件
-    def save(self, name, filepath=None):
+    def save(self, name, environment, filepath=None):
         s = ''
         ans_list = self.user_data[name]['ans_list']
         t1 = self.user_data[name]['time_s1']
@@ -87,7 +87,7 @@ class QueryModel:
         if filepath == None:
             print(s)
         else:
-            filename = name + '.txt'
+            filename = name +"_" + environment + '.txt'
 
             # 判断是否已保存该用户的数据，避免重复保存
             for root, dirs, files in os.walk(filepath):

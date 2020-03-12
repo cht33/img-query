@@ -137,7 +137,7 @@
 
         <hr/>
 
-        <form name="question" action="{% url 'query:questions' question_id user_name %}"
+        <form name="question" action="{% url 'query:questions' question_id user_name environment %}"
               onsubmit="return validateForm();" method="post">
         {% csrf_token %}
 
