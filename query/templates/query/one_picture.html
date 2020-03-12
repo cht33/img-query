@@ -40,6 +40,10 @@
 
     // 记录stage2用时，提交表单，转到下一个query
     function validateForm() {
+        if(grade < 0){
+            alert("Please select an option");
+            return false;
+        }
         document.getElementById("grade").value = grade;
         var end_time = (new Date()).valueOf();
         document.getElementById("time_s2").value = end_time - start_time;
@@ -62,29 +66,35 @@
     //  点击按钮，设置选中样式，记录grade
     function set_grade(value) {
         if (grade > 0) {
-            document.getElementById("grade-btn" + grade).style.border = "1px solid " + grade_color[grade];
+            document.getElementById("grade-btn" + grade).style.border = "2px solid " + grade_color[grade];
         }
         grade = value;
         console.log(grade);
-        document.getElementById("grade-btn" + grade).style.border = "1px solid black";
+        document.getElementById("grade-btn" + grade).style.border = "2px solid black";
     }
 </script>
 {% endblock %}
 
 {% block main_body %}
-
+ 
 <div class="container mt-2">
+    {% if environment == '0'%}
+    <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
+    <hr/>
+    {% elif environment == '1'%}
     <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
     <h3 style="text-align: center;">intent description: {{ intent }}</h3>
+    <hr/>
+    {% endif %}
 
-    <div class="row justify-content-center mt-3">
+    <!-- <div class="row justify-content-center mt-3">
         <div class="col-3">
             {% load static %}
             <img style="width: 100%;" src="{% static img1 %}" />
         </div>
-    </div>
+    </div> -->
 
-    <hr/>
+    
 
     <div class="row justify-content-center" id="annt-btn">
         <div class="col-3">
