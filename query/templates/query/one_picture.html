@@ -58,7 +58,7 @@
         document.getElementById("img-pair").style.display="inline";
         document.getElementById("annt-btn").style.display="none";
         for (i = 1; i < 9; i++) {
-            document.getElementById("grade-btn" + i).style.border = "1px solid " + grade_color[i];
+            document.getElementById("grade-btn" + i).style.border = "2px solid " + grade_color[i];
             document.getElementById("grade-btn" + i).style.backgroundColor = grade_color[i];
         }
     }
@@ -76,7 +76,7 @@
 {% endblock %}
 
 {% block main_body %}
- 
+
 <div class="container mt-2">
     {% if environment == '0'%}
     <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
@@ -94,7 +94,7 @@
         </div>
     </div> -->
 
-    
+
 
     <div class="row justify-content-center" id="annt-btn">
         <div class="col-3">
