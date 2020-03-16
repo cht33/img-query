@@ -20,28 +20,31 @@ SAVE_PATH = 'query/results/'
 all_questions = Questions(QUESTION_DATA, QUESTION_SHUFFLE)
 model = QueryModel(QUSETION_START_POS, QUSETION_NUM, all_questions)
 
+def concat_id(name, env):
+    return name + '_' + env
+
 # homepage
 def homepage(request):
     if request.POST.get('user_name'):
         environment = str(request.POST['environment'])
         user_name = request.POST['user_name']
+        user_id = concat_id(user_name, environment)
 
         # 根据是否存在当前用户来定位问题
-        if model.has_user(user_name):
-            question_id = model.get_user_ques_id(user_name)
+        if model.has_user(user_id):
+            question_id = model.get_user_ques_id(user_id)
             return HttpResponseRedirect(reverse('query:questions', args=(question_id, user_name, environment)))
         else:
-            model.add_new_user(user_name)
+            model.add_new_user(user_id)
             return HttpResponseRedirect(reverse('query:questions', args=(0, user_name, environment)))
     else:
         return render(request, 'query/homepage.html')
 
-# tips page
-def tips(request, user_name):
-    return render(request, 'query/tips.html', {'num': len(model), 'user_name': user_name})
-
 # process function
 def process_question_post(request, question_id, user_name, environment):
+    user_id = concat_id(user_name, environment)
+    if not model.has_user(user_id):
+        raise Http404("User does not exist!")
 
     if question_id < 0 or question_id > len(model):
         raise Http404("Question does not exist!")
@@ -51,7 +54,7 @@ def process_question_post(request, question_id, user_name, environment):
         ans = int(request.POST.get('grade'))
         t1 = int(request.POST.get('time_s1'))
         t2 = int(request.POST.get('time_s2'))
-        model.set_ans(user_name, question_id-1, ans, t1, t2)
+        model.set_ans(user_id, question_id-1, ans, t1, t2)
 
     # 返回下一个问题的名字，图片文件名，图片描述
     if question_id != len(model):
@@ -73,7 +76,8 @@ def process_question_post(request, question_id, user_name, environment):
 def questions(request, question_id, user_name, environment):
     content = process_question_post(request, question_id, user_name, environment)
     if content == None:
-        model.save(user_name, environment, SAVE_PATH)
+        user_id = concat_id(user_name, environment)
+        model.save(user_id, SAVE_PATH)
         return HttpResponseRedirect(reverse('query:thanks'))
     else:
         return render(request, 'query/one_picture.html', content)
