@@ -10,7 +10,7 @@ class Questions:
     def __init__(self, filename, QUESTION_SHUFFLE):
         with open(filename, 'r', encoding='utf8') as f:
             questions = f.readlines()
-            questions = [t.strip().split() for t in questions]
+            questions = [t.strip().split("\t") for t in questions]
             self.questions = questions
             self.question_shuffle = QUESTION_SHUFFLE
 

@@ -7,13 +7,13 @@ from .models import QueryModel, Questions
 QUSETION_START_POS = 0
 
 # 问题总数
-QUSETION_NUM = 5
+QUSETION_NUM = 300
 
 # 是否打乱问题顺序
-QUESTION_SHUFFLE = False
+QUESTION_SHUFFLE = True
 
 # 数据集和结果保存路径
-QUESTION_DATA = 'query/test_data_1'
+QUESTION_DATA = 'query/platform_data'
 IMG_PATH = 'query/images/'
 SAVE_PATH = 'query/results/'
 
