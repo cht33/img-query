@@ -58,13 +58,14 @@ def process_question_post(request, question_id, user_name, environment):
 
     # 返回下一个问题的名字，图片文件名，图片描述
     if question_id != len(model):
-        query, intent, img1, img2, img3 = model.get_question(question_id)
+        query, intent, img1, img2, img3, img4 = model.get_question(question_id)
         content = {
             'query': query,
             'intent': intent,
             'img1': IMG_PATH + img1,
             'img2': IMG_PATH + img2,
             'img3': IMG_PATH + img3,
+            'img4': IMG_PATH + img4,
         }
         content['question_id'] = question_id + 1
         content['user_name'] = user_name

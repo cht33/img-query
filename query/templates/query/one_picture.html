@@ -80,19 +80,34 @@
 <div class="container mt-2">
     {% if environment == '0'%}
     <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
+    <h3 style="text-align: center;">intent description: {{ intent }}</h3>
     <hr/>
     {% elif environment == '1'%}
     <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
-    <h3 style="text-align: center;">intent description: {{ intent }}</h3>
     <hr/>
-    {% endif %}
-
-    <!-- <div class="row justify-content-center mt-3">
+    {% elif environment == '2'%}
+    <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
+    <h4 style="text-align: center;">该查询下相关性高的图片：</h4>
+    <div class="row justify-content-center mt-3">
         <div class="col-3">
             {% load static %}
             <img style="width: 100%;" src="{% static img1 %}" />
         </div>
-    </div> -->
+    </div>
+    <hr/>
+    {% elif environment == '3'%}
+    <h3 style="text-align: center;">Query{{ question_id }}: {{ query }}</h3>
+    <h4 style="text-align: center;">该查询下相关性低的图片：</h4>
+    <div class="row justify-content-center mt-3">
+        <div class="col-3">
+            {% load static %}
+            <img style="width: 100%;" src="{% static img4 %}" />
+        </div>
+    </div>
+    <hr/>
+    {% endif %}
+
+    
 
 
 
